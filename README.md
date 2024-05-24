@@ -1,1 +1,0 @@
-# rust_system_programming_ownership_move
