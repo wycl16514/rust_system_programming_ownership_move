@@ -30,6 +30,17 @@ Then the memory model will like following:
 
 ![rust_move](https://github.com/wycl16514/rust_system_programming_ownership_move/assets/7506958/b16a7e0f-96e2-4735-b27d-9da6380908b4)
 
-As we can see, the clone method make a deep copy for the original data, and now we have two copy of string vectors. Now we can change data belongs to root owner t without effecting
-root owner u. The problem for this method is, when the original memory structure is complex or huge, the time need to make the deep copy is long and we need to wast another chunk of
-memory to save the same data, if we only need to read into the data without chaning it, such method will cause serious performance loss.
+As we can see, the clone method make a deep copy for the original data, and now we have two copy of string vectors. Now we can change data belongs to root owner t without effecting root owner u. 
+
+The problem for this method is, when the original memory structure is complex or huge, the time need to make the deep copy is long and we need to wast another chunk of memory to save the same data, if we only need to read into the data without chaning it, such method will cause serious 
+performance loss.
+
+In order to avoid any unneccesary memory deep copy and the performace demage, Rust provide mechanism for memory sharing by using reference count. 
+Which means a chunk of memory can be "owned" by multiple root owners and there is a reference count to remember how many owners are owing the data
+chunk, when one owner go out of its scope and invalided, the reference count is reduce by 1, and if the reference count reduce to 0, the memory chunk
+will be released.
+
+Let's see a code example:
+```rs
+
+```
