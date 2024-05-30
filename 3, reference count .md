@@ -2,7 +2,7 @@ In last section, we know root owner in memory management of Rust, when we move t
 other variable, Rust compiler will report error and adivce you using clone, for example we have the following code:
 ```rs
 fn reference_count() {
-    let s = vec!["hello", "world"];
+    let s = vec!["hello".to_string(), "world".to_string()];
     let t = s;
     let u = s;
 }
@@ -42,5 +42,33 @@ will be released.
 
 Let's see a code example:
 ```rs
+use std::{rc::Rc, vec};
+fn reference_count() {
+    //let s = vec!["hello".to_string(), "world".to_string()];
+    //let t = s;
+    //make deep copy
+    // let t = s.clone();
+    // let u = s;
 
+    //using refernce count to avoid clone
+    let s = Rc::new(vec!["hello".to_string(), "world".to_string()]);
+    let t = s.clone();
+    let u = s.clone();
+    /*
+    reference count can only read
+    */
+    println!("s: {:?}", s);
+    s[0].push('!'); //bad, reference count is immutable
+}
+
+fn main() {
+    reference_count();
+}
 ```
+In aboved code, we used std::rc::Rc as for reference count, when we wrap an object in Rc::new, the code will attach a counter to the object, every 
+time we call its clone method, it won't make deep copy on the object but increase the counter to indicate how many root owners it has, notice when
+using reference count, the object becomes immutable, any attent to mute the object will cause panic, the meomory model for reference count is as 
+following:
+
+![rust_move (1)](https://github.com/wycl16514/rust_system_programming_ownership_move/assets/7506958/b05cd703-9d2a-4795-85ec-e35153bc380c)
+
